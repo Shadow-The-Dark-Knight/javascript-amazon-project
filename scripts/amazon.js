@@ -1,3 +1,5 @@
+import {cart} from '../data/cart.js';
+
 
 // save the data ^ data structure
 // to fixed methods allows other decimals to show
