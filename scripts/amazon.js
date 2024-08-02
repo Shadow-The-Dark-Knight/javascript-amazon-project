@@ -1,5 +1,5 @@
 import {cart} from '../data/cart.js';
-
+import {products} from '../data/products.js';
 
 // save the data ^ data structure
 // to fixed methods allows other decimals to show
