@@ -65,3 +65,6 @@ export function renderPaymentSummary() {
   document.querySelector('.js-payment-summary')
   .innerHTML = paymentSummaryHTML;
 }
+// issue that arises is that when I change the delivery option
+// the price doesn't change until I refresh the page
+// solution use renderPaymentSummary so that refreshes automatically
