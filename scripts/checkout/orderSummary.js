@@ -1,7 +1,6 @@
-import {cart, removeFromCart, calculateCartQuantity, updateDeliveryOption} from '../../data/cart.js';
+import {cart, removeFromCart, calculateCartQuantity, updateQuantity, updateDeliveryOption} from '../../data/cart.js';
 import {products, getProduct} from '../../data/products.js';
 import { formatCurrency} from '../utils/money.js';
-import {hello} from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOptions.js'
 import {renderPaymentSummary} from './paymentSummary.js';
@@ -13,7 +12,10 @@ import {renderPaymentSummary} from './paymentSummary.js';
 
 export function renderOrderSummary () {
    let cartSummaryHTML = '';
+
    
+   
+
    cart.forEach((cartItem) => {
      const productId = cartItem.productId;
      
@@ -62,14 +64,17 @@ export function renderOrderSummary () {
                    <div class="product-quantity
                    js-product-quantity-${matchingProduct.id}">
                      <span>
-                       Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+                       Quantity: <span class="quantity-label 
+                       js-quantity-label-${matchingProduct.id}">
+                       ${cartItem.quantity}</span>
                      </span>
-                     <span class="update-quantity-link link-primary"
+                     <span class="update-quantity-link link-primary js-update-link"
                        data-product-id="${matchingProduct.id}">
                        Update
                      </span>
-                     <input class="quantity-input">
-                     <span class="save-quantity-link link-primary js-save-link">
+                     <input class="quantity-input js-quantity-input-${matchingProduct.id}">
+                     <span class="save-quantity-link link-primary js-save-link"
+                     data-product-id="${matchingProduct.id}">
                      Save
                      </span>
                      <span class="delete-quantity-link link-primary js-delete-link 
@@ -94,7 +99,6 @@ export function renderOrderSummary () {
 
      let html = '';
 
-     // const isChecked = cartItemdeliveryOption.id === cartItem.deliveryOption.id;
 
      deliveryOptions.forEach((deliveryOption) => {
        const today = dayjs();
@@ -160,15 +164,13 @@ export function renderOrderSummary () {
    });
 
 
-   function updateCartQuantity () {
 
-     const cartQuantity = calculateCartQuantity();
+   function updateCartQuantity() {
+    const cartQuantity = calculateCartQuantity();
+    document.querySelector('.js-return-to-home-link')
+      .innerHTML = `${cartQuantity} items`;
+  }
 
-     document.querySelector('.js-return-to-home-link')
-       .innerHTML = `${cartQuantity} items`;
-   }
-
-   // updateCartQuantity();
 
 
    document.querySelectorAll('.js-update-link')
@@ -176,8 +178,8 @@ export function renderOrderSummary () {
      link.addEventListener('click', () => {
        const productId = link.dataset.productId;
        
-       const container = document.querySelector(`.js-cart-item-container-${productId}`)
-       container.classList.add('is-editing-quantity');
+      const container = document.querySelector(`.js-cart-item-container-${productId}`)
+      container.classList.add('is-editing-quantity');
 
      });
    });
@@ -186,12 +188,34 @@ export function renderOrderSummary () {
    document.querySelectorAll('.js-save-link')
    .forEach((link) => {
      link.addEventListener(('click'), () => {
-       const productId = link.dataset.productId;
+      const productId = link.dataset.productId;
 
-       const container = document.querySelector.apply(`.js-cart-item-container-${productId}`)
-       container.classList.remove('is-editing-quantity');
+      const quantityInput = container.querySelector(`.js-quantity-input-${productId}`);
+
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`
+      )
+        container.classList.remove('is-editing-quantity')
+
+       const newQuantity = Number(quantityInput.value);
+       updateQuantity(productId, newQuantity);
+       quantityInput.innerHTML = newQuantity;
+
+       
+      renderCheckoutHeader();
+       renderOrderSummary();
+       renderPaymentSummary();
      });
-   })
+   });
+
+
+
+
+
+
+
+
+  updateCartQuantity();
 
    // dataset class is used where each object has 
    // the same attributes
@@ -203,6 +227,9 @@ export function renderOrderSummary () {
        updateDeliveryOption(productId, deliveryOptionId);
        renderOrderSummary();
        renderPaymentSummary();
+
+       document.querySelector(`.js-delete-link-${productId1}`).click();
+
      });
    });
  }
