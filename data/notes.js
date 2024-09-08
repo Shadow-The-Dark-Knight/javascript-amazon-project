@@ -16,3 +16,4 @@
 // const businessCart = new Cart();
 
 // instane of a class
+// private property #localStorageKey
