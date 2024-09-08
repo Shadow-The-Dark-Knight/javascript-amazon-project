@@ -11,3 +11,8 @@
 
 ////// object orientation programming = oragnize code into objects /////
 // for things that generate objects use PascalCase
+
+// const cart = new Cart();
+// const businessCart = new Cart();
+
+// instane of a class
