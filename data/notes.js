@@ -17,3 +17,10 @@
 
 // instane of a class
 // private property #localStorageKey
+
+// super called parent class of constructor so you don't have to repeat code
+
+// overide method by having extaInfoHTML in childs class and put '' in parents
+// look at 
+
+// polymorphism use a method without knowing a class
